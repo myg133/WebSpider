@@ -8,62 +8,66 @@
 # Original author: MyGeN
 # 
 #######################################################
+import sys
+try:
+    sys.path.index('../')
+    pass
+except Exception:
+    sys.path.append('../')
+    pass
 
 import queue
 from threading import Thread
-
 from Common.Msg import *
-from Common.Scheduler import Scheduler
 
 # TODO: Need to Add Loger
 
 class ThreadBase(Thread):
-	def __init__(self,modelName):
-		Thread.__init__(self)
-		self.MsgQueue = queue.Queue()
-		self.HandleCallback = dict()
-		self.ModelName = modelName
-		self.Schedule = None
-		pass
+    def __init__(self,modelName):
+        Thread.__init__(self)
+        self.MsgQueue = queue.Queue()
+        self.HandleCallback = dict()
+        self.ModelName = modelName
+        self.Schedule = None
+        pass
 
-	def HandleMsg(self, msg):
-		action = 'Default' if msg.Action == None else msg.Action
-		callback = self.HandleCallback[action]
-		needReturn = callback(msg.Data)
-		if needReturn:
-			msg.WarpSrcDst()
-			self.PostMsg(msg)
-		pass
-	
-	# Send the message
-	def PostMsg(self,msg):
-		if self.Schedule != None:
-			self.Schedule.PostMsg(msg)
-		else:
-			raise('This Model is not register to any scheduler, you need to call RegisterTo(schduler) to Register a scheduler')
-		pass
-	
-	# Register self to a scheduler
-	def RegisterTo(self, scheduler):
-		self.Schedule = scheduler
-		scheduler.RegisterModel(self.ModelName, self)
-		pass
-	
-	# Revice message to message queue
-	def ReviceMsg(self, msg):
-		self.MsgQueue.put(msg, block = False)
-		pass
+    def HandleMsg(self, msg):
+        action = 'Default' if msg.Action == None else msg.Action
+        callback = self.HandleCallback[action]
+        needReturn = callback(msg.Data)
+        if needReturn:
+            msg.WarpSrcDst()
+            self.PostMsg(msg)
+        pass
+    
+    # Send the message
+    def PostMsg(self,msg):
+        if self.Schedule != None:
+            self.Schedule.PostMsg(msg)
+        else:
+            self.ReviceMsg(msg)
+        pass
+    
+    # Register self to a scheduler
+    def RegisterTo(self, scheduler):
+        self.Schedule = scheduler
+        scheduler.RegisterModel(self.ModelName, self)
+        pass
+    
+    # Revice message to message queue
+    def ReviceMsg(self, msg):
+        self.MsgQueue.put(msg, block = False)
+        pass
 
-	# overwrite the function
-	def run(self):
-		while True:
-			msg = self.MsgQueue.get(True)
-			if msg != None and msg.Type != MSGTYPE.STOP:
-				self.HandleMsg(msg)
-			elif msg.Type == MSGTYPE.STOP:
-				break
-				pass
-		# 清除消息队列
-		del self.MsgQueue
-		del self.HandleCallback
-		pass
+    # overwrite the function
+    def run(self):
+        while True:
+            msg = self.MsgQueue.get(True)
+            if msg != None and msg.Type != MSGTYPE.STOP:
+                self.HandleMsg(msg)
+            elif msg.Type == MSGTYPE.STOP:
+                break
+        # 清除消息队列
+        del self.MsgQueue
+        del self.HandleCallback
+        pass

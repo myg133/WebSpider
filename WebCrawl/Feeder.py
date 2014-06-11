@@ -8,14 +8,35 @@
 # 
 #######################################################
 
-from Common.ThreadBase import ThreadBase
+import sys
+try:
+    sys.path.index('../')
+    pass
+except Exception:
+    sys.path.append('../')
+    pass
 
-class Feeder(ThreadBase):
-    def __init__(self):
+from Common.Scheduler import Scheduler
+from WebCrawl.Spider import *
+
+class Feeder(Scheduler):
+    def __init__(self,maxSpiderCount):
+        Scheduler.__init__(self,'SpiderManager')
+        self.SpiderPool = list(maxSpiderCount)
         pass
     
     def GetSpider(self,name):
+        for spider in self.SpiderPool:
+            if spider.GetSpiderStatus()==SPIDERFLAG.REDAY:
+                return spider
+                pass
+            pass
+        return None
+
+    def HandleMsg(self,msg):
+        
         pass
 
     def SendSpider(self,pay):
+        #TODO: SendSpider and bulid msg 
         pass

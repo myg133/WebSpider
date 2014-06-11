@@ -7,20 +7,46 @@
 # Original author: MyGeN
 # 
 #######################################################
+import sys
+try:
+    sys.path.index('../')
+    pass
+except Exception:
+    sys.path.append('../')
+    pass
+
 import urllib.request
+from Common.ThreadBase import ThreadBase
+from Common.Msg import *
 
+class SPIDERFLAG(object):
+    RUN = 0
+    REDAY = 1
+        
 
-class Spider(object):
-    def __init__(self, feeder):
-        self.__feeder = feeder
+class Spider(ThreadBase):
+    def __init__(self, spiderName):
+        ThreadBase.__init__(self,spiderName)
+        self.__status = SPIDERFLAG.REDAY
         pass
 
     def Feed(self, url):
+        self.__status = SPIDERFLAG.RUN
         self.__url = url
         pass
 
     def Go(self):
+        self.start()
+        return data
+
+    def run(self):
         req = urllib.request.urlopen(self.__url)
         data = req.read().decode('utf-8')
         req.close()
-        return data
+        msg = Msg(self.ModelName,)
+        self.__status = SPIDERFLAG.REDAY
+        pass
+
+    def GetSpiderStatus(self):
+        return self.__status
+        pass

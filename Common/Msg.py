@@ -9,11 +9,12 @@
 #######################################################
 
 class MSGTYPE(object):
-  CALL = 1
-  RETURN = 2
+  STOP = 0
+  INNER = 1
+  OUTER = 2
 
 class Msg(object):
-    def __init__(self, srcModel, dstModel, data = None, msgType = MSGTYPE.CALL, action = None):
+    def __init__(self, srcModel, dstModel, data = None, msgType = None, action = None):
       self.__sequence = 0
       self.__src = srcModel
       self.__dst = dstModel
