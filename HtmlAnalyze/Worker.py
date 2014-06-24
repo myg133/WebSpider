@@ -16,24 +16,20 @@ except Exception:
     sys.path.append('../')
     pass
 
+from bs4 import BeautifulSoup
 from html.parser import HTMLParser
 
 
-class Worker(HTMLParser):
-
-    '''需要读取配置，获取需要爬的xpath集合'''
-
-    def __init__(self):
-        HTMLParser.__init__(self)
-        pass
-
-    def handle_starttag(self, tag, attrs):
-        pass
-
-    def handle_endtag(self, tag):
-        pass
-
-    def handle_data(self, data):
-        pass
-
+class Worker():
+  def __init__(self):
+    self.soup = BeautifulSoup()
+    pass
+  
+  def Feed(self,htmlMarkup):
+    # Read rules in config file 
+    # filter the tags by rules
+    # build entity with html content
+    # return the entity
+    if self.soup:
+      self.soup.find()
     pass
