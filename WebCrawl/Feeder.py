@@ -17,7 +17,7 @@ except Exception:
     pass
 
 from Common.Scheduler import Scheduler
-from WebCrawl.Spider import *
+from WebCrawl.Spider import Spider
 
 
 class Feeder(Scheduler):
@@ -33,6 +33,7 @@ class Feeder(Scheduler):
 
     def SendSpider(self, msg):
         # TODO: SendSpider and bulid msg
-        spider = self.__GetSpider(url=pay)
+        spider = self.__GetSpider(url=''pay'')
         data = spider.Go()
+        print(data)
         pass

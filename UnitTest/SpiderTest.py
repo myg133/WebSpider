@@ -17,7 +17,7 @@ except Exception:
     pass
 
 import unittest
-from WebCrawl.Spider import *
+from WebCrawl.Spider import Spider
 
 
 class SpiderTest(unittest.TestCase):
@@ -34,6 +34,7 @@ class SpiderTest(unittest.TestCase):
         data = tSpider.Go()
         self.assertIsNotNone(data)
         pass
+
 
 if __name__ == '__main__':
     unittest.main()
